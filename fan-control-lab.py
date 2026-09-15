@@ -46,3 +46,23 @@ def application_create_command(device_id: str, value: str) -> dict[str, Any]:
         "timestamp" : utc_timestamp(),
      }
     # raise NotImplementedError("TODO 1: build the application command dictionary.")
+
+    def gateway_validate(command: dict[str, Any]) -> tuple[bool, str]:
+        """Check whether the gateway should forward this command."""
+        # TODO 2: reject unknown device identifiers.
+        if command['deviceId'] not in DEVICES:
+            return False, f"Unknown DeviceID : {command['deviceId']}"
+        
+        # TODO 3: reject commands that are not "setPower".
+        if command["command"] != "setPower":
+            return False, f"Invalid Command : {command['command']}"
+
+        # TODO 4: reject values that are not "on" or "off".
+        if command["value"] == "on":
+            return True, 'Valid Command'
+        elif command['value'] == "off":
+            return True, 'Valid Command'
+        else:
+            return False, "Invalid Values"
+        
+        # raise NotImplementedError("TODO 2-4: validate deviceId, command, and value.")
