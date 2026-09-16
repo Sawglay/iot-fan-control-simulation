@@ -66,3 +66,20 @@ def application_create_command(device_id: str, value: str) -> dict[str, Any]:
             return False, "Invalid Values"
         
         # raise NotImplementedError("TODO 2-4: validate deviceId, command, and value.")
+
+    def device_apply_command(command: dict[str, Any]) -> dict[str, Any]:
+        """Apply an accepted command to the simulated device state."""
+        device_id = command["deviceId"]
+        value = command["value"]
+
+    # TODO 5: update DEVICES[device_id]["power"] with the requested value.
+        DEVICES[device_id]["power"] = value,
+
+    # raise NotImplementedError("TODO 5: apply the accepted command to the device.")
+
+        return {
+            "deviceId": device_id,
+            "reported": deepcopy(DEVICES[device_id]),
+            "status": "accepted",
+            "timestamp": utc_timestamp(),
+        }
