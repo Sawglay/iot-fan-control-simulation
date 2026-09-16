@@ -83,3 +83,13 @@ def application_create_command(device_id: str, value: str) -> dict[str, Any]:
             "status": "accepted",
             "timestamp": utc_timestamp(),
         }
+    def application_display_result(result: dict[str, Any] | None) -> None:
+        """Display reported state without pretending that a request always worked."""
+        if result is None:
+            trace("application", "No result yet: command outcome is unconfirmed.")
+            return
+
+        trace(
+            "application",
+            f"Reported power for {result['deviceId']}: {result['reported']['power']}",
+        )
