@@ -123,3 +123,31 @@ def application_create_command(device_id: str, value: str) -> dict[str, Any]:
             application_display_result(None)
         else:
             application_display_result(result)
+            
+    def main() -> None:
+        print("Lesson 02 fan control lab")
+        print("Complete TODO 1 to TODO 5, then rerun this file.")
+        print("\nStarting device states")
+        print(deepcopy(DEVICES))
+
+        try:
+            print("\nScenario A: valid command should turn sim-fan-01 on")
+            run_exchange("sim-fan-01", "on")
+
+            print("\nScenario B: invalid value should be rejected")
+            run_exchange("sim-fan-01", "start")
+
+            print("\nScenario C: unknown device should be rejected")
+            run_exchange("sim-fan-99", "off")
+
+            print("\nScenario D: accepted command with missing result")
+            run_exchange("sim-fan-01", "off", simulate_missing_result=True)
+        except NotImplementedError as error:
+            print(f"\n{error}")
+
+        print("\nFinal device states")
+        print(deepcopy(DEVICES))
+    
+    
+    if __name__ == "__main__":
+        main()
