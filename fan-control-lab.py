@@ -93,3 +93,33 @@ def application_create_command(device_id: str, value: str) -> dict[str, Any]:
             "application",
             f"Reported power for {result['deviceId']}: {result['reported']['power']}",
         )
+    def run_exchange(device_id: str, value: str, *, simulate_missing_result: bool = False) -> None:
+        """Run one application -> gateway -> device -> application exchange."""
+        trace("initial device states", deepcopy(DEVICES))
+
+        command = application_create_command(device_id, value)
+        trace("application command", command)
+
+        accepted, reason = gateway_validate(command)
+        trace("gateway decision", reason)
+
+        if not accepted:
+            trace("device action", "Command rejected before reaching the device.")
+            application_display_result(
+                {
+                    "deviceId": device_id,
+                    "reported": {"power": "unchanged"},
+                    "status": "rejected",
+                    "reason": reason,
+                    "timestamp": utc_timestamp(),
+                }
+            )
+            return
+
+        result = device_apply_command(command)
+        trace("device result", result)
+
+        if simulate_missing_result:
+            application_display_result(None)
+        else:
+            application_display_result(result)
