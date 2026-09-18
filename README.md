@@ -12,4 +12,11 @@ This project models an internet-based IoT control workflow locally. It does not 
 - Device state updates and reported results.
 - Console traces for each stage of the exchange.
 - A missing-result scenario that demonstrates why sending a command does not guarantee confirmation.
+  
+## Requirements
+
+- Python 3.10 or newer recommended.
+- No third-party packages or hardware required.
+
+The script uses only Python's standard library: `copy`, `datetime`, and `typing`.
 
