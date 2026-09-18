@@ -20,3 +20,16 @@ This project models an internet-based IoT control workflow locally. It does not 
 
 The script uses only Python's standard library: `copy`, `datetime`, and `typing`.
 
+## Before Running the Supplied Code
+
+The pasted lab code needs two corrections before it behaves as described below:
+
+1. Move `gateway_validate`, `device_apply_command`, `application_display_result`, `run_exchange`, and `main` to the top level. Also move the `if __name__ == "__main__":` block to the top level. They are currently nested inside `application_create_command`, after its `return`, so the program does not reach them.
+2. Remove the trailing comma from the device state assignment:
+
+   ```python
+   DEVICES[device_id]["power"] = value
+   ```
+
+   Using `value,` creates a one-item tuple such as `('on',)` instead of storing the string `"on"`.
+
