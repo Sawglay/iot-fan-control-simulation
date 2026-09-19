@@ -44,6 +44,15 @@ python fan_control_lab.py
 
 If your system uses `python3`:
 
+## How It Works
+
+1. **Application:** Creates a command containing the target device and requested power value.
+2. **Gateway:** Checks that the device exists, the command is `setPower`, and the value is `on` or `off`.
+3. **Device:** Applies an accepted command to its in-memory state and creates a result.
+4. **Application:** Displays the reported power state, or indicates that the outcome is unconfirmed if no result is received.
+
+Rejected commands stop at the gateway and do not change device state.
+
 ```bash
 python3 fan_control_lab.py
 ```
