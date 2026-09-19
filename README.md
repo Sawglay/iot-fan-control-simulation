@@ -58,3 +58,87 @@ python3 fan_control_lab.py
 ```
 
 The script runs four predefined scenarios automatically; it does not prompt for user input.
+
+### Example Command
+
+```python
+{
+    "deviceId": "sim-fan-01",
+    "command": "setPower",
+    "value": "on",
+    "requestedBy": "application",
+    "timestamp": "2026-09-18T12:00:00+00:00"
+}
+```
+
+The timestamp above is illustrative; the program generates the current UTC timestamp for each message.
+
+### Simulated Devices
+
+| Device ID | Initial power |
+| --- | --- |
+| `sim-fan-01` | `off` |
+| `sim-fan-02` | `off` |
+
+## Lab Scenarios
+
+The expected behavior below assumes the two code corrections have been applied. Scenarios run in order and share device state.
+
+| Scenario | Request | Gateway decision | Outcome |
+| --- | --- | --- | --- |
+| A: Valid command | Turn `sim-fan-01` `on` | Accepted | Fan turns on; application displays `on`. |
+| B: Invalid value | Set `sim-fan-01` to `start` | Rejected | Fan remains on. |
+| C: Unknown device | Turn `sim-fan-99` `off` | Rejected | No device state changes. |
+| D: Missing result | Turn `sim-fan-01` `off` | Accepted | Fan turns off, but application reports an unconfirmed outcome. |
+
+In Scenario D, the simulation prints the device result in its trace but deliberately withholds that result from the application display function.
+
+Expected final device states:
+
+```python
+{
+    "sim-fan-01": {"power": "off"},
+    "sim-fan-02": {"power": "off"}
+}
+```
+
+## Main Functions
+
+| Function | Purpose |
+| --- | --- |
+| `utc_timestamp()` | Generates an ISO 8601 UTC timestamp. |
+| `trace()` | Prints a labeled stage and its details. |
+| `application_create_command()` | Builds the application's command dictionary. |
+| `gateway_validate()` | Returns an acceptance flag and a reason. |
+| `device_apply_command()` | Updates device power and returns a snapshot of its state. |
+| `application_display_result()` | Displays reported power or an unconfirmed-outcome message. |
+| `run_exchange()` | Coordinates one complete control exchange. |
+| `main()` | Runs the four demonstration scenarios. |
+
+## Lab TODOs
+
+| TODO | Task |
+| --- | --- |
+| 1 | Build a command with `deviceId`, `command`, `value`, `requestedBy`, and `timestamp`. |
+| 2 | Reject unknown device identifiers. |
+| 3 | Reject command types other than `setPower`. |
+| 4 | Reject power values other than `on` and `off`. |
+| 5 | Update the target device's power state. |
+
+The supplied code includes implementations for these TODOs, with the corrections noted above still required.
+
+## Learning Outcomes
+
+- Understand the roles of an application, gateway, and device in IoT control.
+- Build and validate structured command messages using Python dictionaries.
+- Distinguish requested state from reported state.
+- Understand that a missing response does not necessarily mean a command failed.
+- Use timestamps and console traces to follow an exchange.
+
+## Limitations
+
+- State is stored in memory and resets when the script restarts.
+- No real network protocols, authentication, or physical devices are implemented.
+- Validation assumes the required dictionary keys are present.
+- The invalid-command-type check exists, but the four built-in scenarios do not exercise it.
+- For rejected requests, `"unchanged"` is a display marker, not a reading of the device's actual power state.
